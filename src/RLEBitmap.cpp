@@ -5,7 +5,7 @@
 //
 
 #include <Arduino.h>
-#include <Adafruit_GFX.h>
+#include <TFT_eSPI.h>
 
 #include "RLEBitmap.h"
 
@@ -66,7 +66,7 @@ void
 renderRLEBitmap(
 	const RLEBitmapInfo &bitmapInfo,
 	int16_t x, int16_t y,
-	Adafruit_GFX *pGFX,
+	TFT_eSPI *pGFX,
 	bool blackIsTransparent,
 	uint8_t reduction)
 {
@@ -111,7 +111,7 @@ renderRLEBitmap(
 
 					if (!blackIsTransparent || color != 0)
 					{
-						pGFX->writeFastHLine(xPos + (xOffset / reduction), yPos + (yOffset / reduction),
+						pGFX->drawFastHLine(xPos + (xOffset / reduction), yPos + (yOffset / reduction),
 							newLength / reduction, color);
 					}
 
@@ -136,7 +136,7 @@ renderRLEBitmapWithRLEMask(
 	const RLEBitmapInfo &bitmapInfo,
 	const RLEBitmapInfo &maskInfo,
 	int16_t x, int16_t y,
-	Adafruit_GFX *pGFX,
+	TFT_eSPI *pGFX,
 	bool blackIsTransparent)
 {
 	if ((bitmapInfo.width != maskInfo.width) || (bitmapInfo.height != maskInfo.height))
@@ -194,10 +194,16 @@ renderRLEBitmapWithRLEMask(
 				{
 					if (colorBitmap != 0 || !blackIsTransparent)
 					{
-						pGFX->writeFastHLine(xPos, yPos, length, colorBitmap);
+						pGFX->drawFastHLine(xPos, yPos, length, colorBitmap);
 					}
 				}
-
+				else // Use non-masking color to avoid block erase flicker
+				{
+					if (!blackIsTransparent)
+					{
+						pGFX->drawFastHLine(xPos, yPos, length, colorMask);
+					}
+				}
 				xPos += length;
 
 				bitmapRunLength -= length;

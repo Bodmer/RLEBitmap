@@ -30,7 +30,7 @@
 #ifndef _RLEBITMAP_h
 #define _RLEBITMAP_h
 
-class Adafruit_GFX;
+class TFT_eSPI;
 
 #if not defined PROGMEM_LATE
 #if defined ARDUINO_ARCH_AVR
@@ -59,7 +59,7 @@ void
 renderRLEBitmap(
 	const RLEBitmapInfo &bitmapInfo, // Bitmap information retreived previously.
 	int16_t x, int16_t y,            // Location to render bitmap (top-left corner)
-	Adafruit_GFX *pGFX,              // Graphics context for rendering.
+	TFT_eSPI *pGFX,              // Graphics context for rendering.
 	bool blackIsTransparent = false, // if 'true', black pixels in the bitmap are skipped.
 	uint8_t reduction = 1);          // Factor to reduce the size of the bitmap
 
@@ -68,7 +68,7 @@ renderRLEBitmapWithRLEMask(           //
 	const RLEBitmapInfo &bitmapInfo,  // Bitmap information retreived previously.
 	const RLEBitmapInfo &maskInfo,    // Bitmap that acts as a mask.
 	int16_t x, int16_t y,             // Location to render bitmap (top-left corner)
-	Adafruit_GFX *pGFX,               // Graphics context for rendering.
+	TFT_eSPI *pGFX,               // Graphics context for rendering.
 	bool blackIsTransparent = false); // if 'true', black pixels in the bitmap are skipped.
 
 #endif

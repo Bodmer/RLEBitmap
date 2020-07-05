@@ -6,10 +6,7 @@
 #include <Arduino.h>
 #include <SPI.h>
 
-#include <Adafruit_gfx.h>
-
-//  Replace this with the include files for your particular display
-#include <Waveshare_ILI9486.h>
+#include <TFT_eSPI.h>
 
 #include <RLEBitmap.h>
 
@@ -19,7 +16,7 @@
 #include "HtmlColors.h"
 
 //  Replace this with the declaration for your particular display
-Waveshare_ILI9486 MyTFT;
+TFT_eSPI MyTFT = TFT_eSPI();
 
 //
 //  The easiest way to deal with the masks is to use function pointers (rather than data
@@ -115,26 +112,26 @@ void setup()
 
 //  This example shows the moon phase starting with Jan 1, 2020, then advancing one day
 //  per second.
-unsigned long t = 1577836800L; //  Unixtime Jan 1, 2020
+unsigned long t = 1577836800L; //  Unix time Jan 1, 2020
 
 void loop()
 {
 	RLEBitmapInfo bmMoon;
 	RLEBitmapInfo bmMask;
 
-	//  Calulate the mask for the given time.
+	//  Calculate the mask for the given time.
 	unsigned int mask_index = lunation(t, COUNTOF(mask_functions));
 
 	//  Get the bitmap info for the moon image and the mask.
 	get_moon_128_RLEBM(bmMoon);
 	mask_functions[mask_index](bmMask);
 
-	MyTFT.fillRect(10, 10, bmMoon.width, bmMoon.height, RGB565::Orange);
+	//MyTFT.fillRect(10, 10, bmMoon.width, bmMoon.height, RGB565::Orange);
 
 	renderRLEBitmapWithRLEMask(
 		bmMoon, bmMask,
 		10, 10,
-		&MyTFT, true);
+		&MyTFT, false);
 
 	//  You could also use the masks as 'icons' for the current moon phase
 	renderRLEBitmap(
@@ -142,7 +139,7 @@ void loop()
 		10, 160,
 		&MyTFT, false);
 
-	delay(1000);
+	//delay(1000);
 
 	t += 84600L;  //  Advance time by one day
 }
